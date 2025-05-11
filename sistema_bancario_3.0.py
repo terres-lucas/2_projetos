@@ -174,7 +174,7 @@ def menu_principal():
     menu_principal = ("""\n
     =============== MENU =================
     [1]\tAcessar Conta
-    [2]\tAbertura de Conta
+    [2]\tPrimeira Conta
     [3]\tSair
     """)
     print(textwrap.dedent(menu_principal))
@@ -186,7 +186,7 @@ def menu_conta():
     [1]\tDepósito
     [2]\tSaque
     [3]\tExtrato
-    [4]\Minha(s) Conta(s)
+    [4]\tMinha(s) Conta(s)
     [5]\tVoltar
     """
     print(textwrap.dedent(menu_conta))
@@ -205,7 +205,7 @@ def menu_confirmar():
     else:
         return True
 
-def menu_voltar(menu):
+def menu_voltar():
     menu_voltar = """\n
     =====================================
 
@@ -214,19 +214,16 @@ def menu_voltar(menu):
     [2]\tNão
     """
     print(textwrap.dedent(menu_voltar))
-    opcao = input("Escolha uma opção: ")
-    if opcao == "1":
-        opcao_menu = menu()
-        return opcao_menu
-    elif opcao == "2":
-        return False
+    voltar = input("Escolha uma opção: ")
+    
+    return voltar
 
 def menu_cadastro():
     menu_cadastro = ("""\n
     ============== CADASTRO ===============
-    Se você já possui cadastro, selecione a opção 2.
+    Se você já possui uma conta, selecione a opção 2.
 
-    [1]\tCadastro
+    [1]\tPrimeira Conta
     [2]\tAbrir Nova Conta
     [3]\tSair
     """)
@@ -315,8 +312,10 @@ def criar_cliente(clientes):
 
     clientes.append(cliente)
 
-    print("\n=== Cliente cadastrado com sucesso! ===")
-
+    print("\n=== Dados cadastrados com sucesso! ===")
+    numero_conta = len(clientes)
+    criar_conta(numero_conta, clientes, contas)
+    return
 
 def criar_conta(numero_conta, clientes, contas):
     cpf = input("Informe o CPF do cliente: ")
@@ -329,7 +328,7 @@ def criar_conta(numero_conta, clientes, contas):
         print("\n=== Conta criada com sucesso! ===")
 
     else:
-        print("\n@@@ Cliente não encontrado, fluxo de criação de conta encerrado! @@@")
+        print("\nCliente não encontrado.")
         return
 
 def listar_contas(contas):
@@ -358,26 +357,28 @@ while True:
         cpf = input("Informe o seu CPF: ")
         opcao = acessar_conta(cpf)
         
-        if opcao == "1":
-            depositar(clientes, cpf)
-            menu_voltar(acessar_conta)
+        voltar = "1"
+        while voltar == "1":
+            opcao = menu_conta()
+            if opcao == "1":
+                depositar(clientes, cpf)
+                voltar = menu_voltar()
 
-        elif opcao == "2":
-            sacar(clientes, cpf)
-            menu_voltar(acessar_conta)
+            elif opcao == "2":
+                sacar(clientes, cpf)
+                voltar = menu_voltar()
 
-        elif opcao == "3":
-            exibir_extrato(clientes, cpf)
-            menu_voltar(acessar_conta)
+            elif opcao == "3":
+                exibir_extrato(clientes, cpf)
+                voltar = menu_voltar()
 
-        elif opcao == "4":
-            listar_contas(contas)
+            elif opcao == "4":
+                listar_contas(contas)
+                voltar = menu_voltar()
 
-        elif opcao == "5":
-            menu_voltar(menu_principal)
-
-        else:
-            print("Opção inválida. Tente novamente.")
+            elif opcao == "5":
+                break
+       
 
     elif opcao == "2":
         opcao = menu_cadastro()
